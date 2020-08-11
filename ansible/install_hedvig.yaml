@@ -1,0 +1,27 @@
+- name: Run the software installer
+  hosts: deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Change file permissions
+      file:
+        path: /tmp/hedvig_extract.bin
+        mode: '0755'
+      become: true
+    - name: Change file permissions
+      file:
+        path: /tmp/rpm_extract.bin
+        mode: '0755'
+      become: true
+    - name: Install / extract file 0
+      command: ./hedvig_extract.bin
+      environment: 
+        HV_ROOTPASS: hedvig 
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Install / extract file 1
+      command: ./rpm_extract.bin
+      environment: 
+        HV_ROOTPASS: hedvig 
+        HV_MEM_PROFILE: small_demo
+      become: true

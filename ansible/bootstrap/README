@@ -1,0 +1,7 @@
+deploy.sh
+deploy.rpms
+id_rsa (provided by user)
+$user (provided by user)
+change list of nodes,cvms,deploy
+prep_azenv.sh
+set_sshd_rootpw.sh

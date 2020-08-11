@@ -1,0 +1,13 @@
+---
+- name: Validate connectivity; make sure keys and jump_server are working correctly
+  hosts:
+    proxy
+    deployment
+    storagenodes
+  vars_files: 
+    - ./vars.yaml
+  tasks:
+    - name: Run a command
+      command: "id"
+      register: out
+    - debug: var=out.stdout_lines

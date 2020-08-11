@@ -1,0 +1,14 @@
+all:
+  children:
+    jump_server:
+      hosts:
+        "{{ jump_server }}"
+    proxy:
+      hosts:
+        vm-proxy:
+    deployment:
+      hosts:
+        vm-deployment:
+    storagenodes:
+      hosts:
+        vm-storagenode[0:2]:

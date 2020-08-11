@@ -1,0 +1,91 @@
+- name: Prepare VMs for hedvig installation
+  hosts:
+    - proxy
+    - deployment
+    - storagenodes
+  vars_files:
+    - ./vars.yaml
+    - ./packages.yaml
+  tasks:
+    # - name: Upgrade all packages
+    #   yum:
+    #     name: "*"
+    #     state: latest
+    #   become: true
+    - name: Set root password
+      become: true
+      user:
+        name: root
+        password: "{{ pwd | password_hash('sha512') }}"
+    - name: Create admin group
+      become: true
+      group:
+        name: admin
+        state: present
+    - name: Create admin user password and append groups
+      become: true
+      user:
+        name: admin
+        password: "{{ pwd | password_hash('sha512') }}"
+        groups: admin, wheel
+        append: yes
+        state: present
+    - name: Install additional packages
+      yum:
+        name: "{{ packages }}"
+        state: latest
+      become: yes
+    - name: Install pip
+      easy_install:
+        name: pip
+        state: latest
+      become: yes
+    - name: Install fabric
+      pip:
+        name: fabric
+      become: yes
+- name: Install Azure CLI
+  hosts: deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Add key
+      rpm_key:
+        state: present
+        key: https://packages.microsoft.com/keys/microsoft.asc
+      become: true
+    - name: Add repository from MSFT
+      yum_repository:
+        description: MSFT repo
+        name: azure-cli.repo
+        baseurl: https://packages.microsoft.com/yumrepos/azure-cli
+        state: present
+      become: true
+    - name: install the latest version of Azure CLI
+      yum:
+        name: azure-cli
+        state: latest
+      become: true
+- name: Steps from set_sshd_rootpw
+  hosts: 
+    - proxy
+    - deployment
+    - storagenodes
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Disable password auth
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^PasswordAuthentication"
+        line: "#PasswordAuthentication"
+      become: yes
+    - name: Disable resource disk
+      lineinfile:
+        path: /etc/waagent.conf
+        regexp: "^ResourceDisk.Format=y"
+        line: "ResourceDisk.Format=n"
+      become: yes
+    - name: Restart server
+      reboot:
+      become: yes

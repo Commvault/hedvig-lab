@@ -1,0 +1,10 @@
+- name: Generate keys and create Azure resources
+  hosts: localhost
+  vars_files: 
+    - ./vars.yaml
+  connection: local
+  tasks:
+    - name: Create resource
+      azure_rm_resourcegroup:
+        name: rg-foo
+        location: foo
