@@ -1,0 +1,25 @@
+- name: Setup ssh keys
+  hosts: localhost
+  vars_files: 
+    - ./vars.yaml
+  connection: local
+  tasks:
+    - name: Remove key from local agent. Otherwise there will be too many retries
+      shell: ssh-add -d ~/.ssh/hedvig
+      ignore_errors: yes
+    - name: Delete existing keys if they exist
+      file:
+        path: ~/.ssh/hedvig
+        state: absent
+    - name: Delete existing keys if they exist
+      file:
+        path: ~/.ssh/hedvig.pub
+        state: absent
+    - name: Generate keys
+      openssh_keypair:
+        force: yes
+        mode: '0400'
+        size: 2048
+        path: ~/.ssh/hedvig
+    - name: Add key to local agent
+      shell: ssh-add ~/.ssh/hedvig

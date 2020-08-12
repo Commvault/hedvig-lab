@@ -1,0 +1,6 @@
+# MANUAL: login to vm-deployment server and run az login
+# export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
+# az login
+- import_playbook: ./extract_software.yaml
+# Currently messing up access to the VMs if invoked
+#- import_playbook: ./set_hostnames.yaml
