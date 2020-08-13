@@ -1,0 +1,25 @@
+- name: Validate connectivity by generating /etc/hosts entries and copying to VMs
+  hosts:
+    proxy
+    deployment
+    storagenodes
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Implicitly validate connectivity and capture hostname / hostname -f pairs
+      command: "echo `hostname` `hostname -f`"
+      register: hostNames
+    - name: Append to local hosts file
+      copy:
+        content: "{{ hostNames.stdout }}"
+        dest: "/tmp/hosts"
+    - name: Append local hosts file to /etc/hosts
+      blockinfile:
+        block: "{{ lookup('file', '/tmp/hosts') }}"
+        dest: /etc/hosts
+        backup: yes
+      become: yes
+    # - name: Set hostname to FQDN
+    #   shell: "hostnamectl set-hostname `hostname -f`"
+    #   register: hostNames
+    #   become: yes

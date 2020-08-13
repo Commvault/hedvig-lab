@@ -1,0 +1,55 @@
+- name: Copy software and extract
+  hosts: deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Copy the software from the bucket
+      command: "az storage blob download --account-name sahvsoftware --container schvsoftware --name hedvig_41.zip --file /tmp/hedvig.zip"
+      register: out
+    - debug: var=out.stdout_lines
+    - name: Unarchive software and place in /tmp
+      unarchive:
+        src: /tmp/hedvig.zip
+        dest: /tmp/.
+        remote_src: yes
+        mode: "0755"
+    - name: Extract file 0
+      command: /tmp/hedvig_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Extract file 1
+      command: /tmp/rpm_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: change perms on /opt/hedvig
+      file:
+        path: /opt/hedvig
+        owner: admin
+        group: admin
+        recurse: yes
+      become: true
+- name: Prepare the hv_deploy file from the data gathered
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Capture the fqdn_hash from the generated hosts file
+      shell: echo `head -1 /tmp/hosts | awk '{split($0,a,"."); print a[2]}'`
+      register: fqdn_hash
+    - name: Insert the FQDN to the ansible config file for remote use
+      template:
+        src: ./hv_deploy.cfg.j2
+        dest: /tmp/hv_deploy.cfg
+- name: Push generated hv_deploy.cfg to vm-deployment:/tmp/.
+  hosts: vm-deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - copy:
+        dest: /tmp/hv_deploy.cfg
+        src: /tmp/hv_deploy.cfg

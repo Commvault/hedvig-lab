@@ -21,52 +21,36 @@ These are the specific installation instructions for creating the cluster in Azu
 ### Infrastructure setup
 1. Submit a service request to Azure to increase the number of CPUs to 64 for the subscription you will be using.
 2. Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) on your local machine
-3. Validate Terraform setup creating a ```./terraform/terraform.tfvars``` file with your subscription id (assumes you've cloned the repo onto your own machine)
+3. Prepare for Terraform setup by creating a ```./terraform/azure/terraform.tfvars``` file with your subscription id (assumes you've cloned the repo onto your own machine)
 ```
-echo subscription_id = "<<your sub-id here>>\n" >> ./terraform/terraform.tfvars
+echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/terraform.tfvars
+```
+4. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
+```
 cd ./ansible
-ansible-playbook ./resources_create.yaml
+ansible-playbook ./main0.yaml
 ```
-1. Get the public IP of the jump / jump_server server created in the previous step and add to ``./ansbile/vars.yaml`` *(automation opportunity)*. The file should look like this when complete:
+5. Update the local known_hosts, validate connectivity, and prepare the VMs
 ```
-jump_server: <<ip address>
-pwd: hedvig
+ansible-playbook ./main1.yaml
 ```
-1. Configure the keys to permit ssh login for subsequent steps
+6. Authenticate the vm-deployment server to Azure
 ```
-ansible-playbook ./known_hosts.yaml
-```
-1. Optional step: validate connectivity
-```
-ansible-playbook ./validate.yaml
-```
-1. Run the main setup script
-```
-ansible-playbook ./setup.yaml
-```
-1. Authenticate the vm-deployment server to Azure
-```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'`
-ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
+export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
 az login
 ```
-1. Copy Hedvig software from the bucket to vm-deployment
+6. Download and extract the software on vm-deployment
 ```
-ansible-playbook ./copy_software.yaml
+ansible-playbook ./main2.yaml
 ```
-1. Copy the bootstrap scripts (entire directory) to vm-jump and then vm-deployment:/tmp/.
-   1. Once done, edit ```prep_azenv.sh``` and comment out all lines after prep_deploy in the bottom and run that file.  It will remove the /mnt/resource in that deploy node.
-1. While logged into the deployment server, copy software to deployment server and run the .bin files; in this case we copy from an existing blob
-1. Login to vm-deployment and run the installation. *this needs to be automated; why does one need to be admin then sudo*
+7. Login to vm-deployment and run the hv_deploy installation
 ```
 export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'`
 ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
 su -l admin
-export HV_ROOTPASS=hedvig 
-export HV_MEM_PROFILE=small_demo
-# tools.bin???
-sudo /tmp/hedvig_extract.bin && sudo /tmp/rpm_extract.bin
+/opt/hedvig/bin/hv_deploy --deploy_new_cluster /tmp/hv_deploy.cfg
 ```
-1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
-2. https://documentation.commvault.com/commvault/hedvig/article?p=121157.htm
-3. https://documentation.commvault.com/commvault/hedvig/article?p=120084.htm
+8. Steps to be validated
+   1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
+   2. https://documentation.commvault.com/commvault/hedvig/article?p=121157.htm
+   3. https://documentation.commvault.com/commvault/hedvig/article?p=120084.htm
