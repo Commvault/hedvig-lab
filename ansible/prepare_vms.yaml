@@ -30,6 +30,16 @@
         groups: admin, wheel
         append: yes
         state: present
+        generate_ssh_key: yes
+    - name: Modify wheel group to allow password-less sudo operations (for admin user)
+      become: true
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^# %wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+        backup: yes
     - name: Install additional packages
       yum:
         name: "{{ packages }}"
