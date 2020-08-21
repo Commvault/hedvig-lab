@@ -38,10 +38,7 @@
   vars_files:
     - ./vars.yaml
   tasks:
-    - name: Capture the fqdn_hash from the generated hosts file
-      shell: echo `head -1 /tmp/hosts | awk '{split($0,a,"."); print a[2]}'`
-      register: fqdn_hash
-    - name: Insert the FQDN to the ansible config file for remote use
+    - name: Resolve variables in file
       template:
         src: ./hv_deploy.cfg.j2
         dest: /tmp/hv_deploy.cfg
@@ -53,3 +50,13 @@
     - copy:
         dest: /tmp/hv_deploy.cfg
         src: /tmp/hv_deploy.cfg
+- name: Push the helper script to the deployment node
+  hosts: vm-deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - copy:
+        dest: ./hv_deploy_helper.sh
+        src: /tmp/hv_deploy_helper.sh
+        backup: yes
+        mode: '0755'
