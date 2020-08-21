@@ -25,7 +25,12 @@ These are the specific installation instructions for creating the cluster in Azu
 ```
 echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/terraform.tfvars
 ```
-4. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
+1. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this:
+```
+pwd: hedvig
+jump_server:
+```
+1. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
 ```
 cd ./ansible
 ansible-playbook ./main0.yaml
@@ -45,10 +50,8 @@ ansible-playbook ./main2.yaml
 ```
 7. Login to vm-deployment and run the hv_deploy installation
 ```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'`
-ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
-su -l admin
-/opt/hedvig/bin/hv_deploy --deploy_new_cluster /tmp/hv_deploy.cfg
+export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
+/tmp/hv_deploy_helper.sh
 ```
 8. Steps to be validated
    1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
