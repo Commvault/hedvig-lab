@@ -1,3 +1,4 @@
 - import_playbook: ./update_known_hosts.yaml
 - import_playbook: ./validate_connectivity.yaml
 - import_playbook: ./prepare_vms.yaml
+- import_playbook: ./set_hostnames.yaml
