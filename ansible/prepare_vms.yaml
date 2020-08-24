@@ -76,6 +76,11 @@
         name: azure-cli
         state: latest
       become: true
+    - name: install ansible (deployment server only)
+      yum:
+        name: ansible
+        state: latest
+      become: true
 - name: Steps from set_sshd_rootpw
   hosts:
     - proxy

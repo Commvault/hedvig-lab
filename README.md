@@ -25,35 +25,31 @@ These are the specific installation instructions for creating the cluster in Azu
 ```
 echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/terraform.tfvars
 ```
-1. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this:
+4. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this:
 ```
 pwd: hedvig
 jump_server:
 ```
-1. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
+5. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
 ```
 cd ./ansible
 ansible-playbook ./main0.yaml
 ```
-5. Update the local known_hosts, validate connectivity, and prepare the VMs
+6. Update the local known_hosts, validate connectivity, and prepare the VMs
 ```
 ansible-playbook ./main1.yaml
 ```
-6. Authenticate the vm-deployment server to Azure
+7. Login to vm-deployment
 ```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
+export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment.internal.cloudapp.net
+```
+8. On the deployment node, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
+```
+su -l admin
 az login
+ansible-playbook /tmp/hedvig/main2.yaml
 ```
-6. Download and extract the software on vm-deployment
-```
-ansible-playbook ./main2.yaml
-```
-7. Login to vm-deployment and run the hv_deploy installation
-```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
-/tmp/hv_deploy_helper.sh
-```
-8. Steps to be validated
+9. Steps to be validated
    1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
    2. https://documentation.commvault.com/commvault/hedvig/article?p=121157.htm
    3. https://documentation.commvault.com/commvault/hedvig/article?p=120084.htm
