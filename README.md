@@ -25,10 +25,11 @@ These are the specific installation instructions for creating the cluster in Azu
 ```
 echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/terraform.tfvars
 ```
-4. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this:
+4. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this replacing "<<name>>" with the name of the blob you will download
 ```
 pwd: hedvig
 jump_server:
+software_filename: <<name>>
 ```
 5. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
 ```

@@ -1,14 +1,15 @@
 - name: Copy software, extract, and then run hv_deploy
   hosts: localhost
   connection: local
+  vars_files:
+    - ./vars.yaml
   tasks:
     - name: Copy the software from the bucket
-      command: "az storage blob download --account-name sahvsoftware --container schvsoftware --name hedvig_41.zip --file /tmp/hedvig/hedvig.zip"
+      command: "az storage blob download --account-name sahvsoftware --container schvsoftware --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
     - name: Unarchive software and place in /tmp
       unarchive:
-        src: /tmp/hedvig.zip
+        src: /tmp/hedvig/hedvig.zip
         dest: /tmp/hedvig/.
-        remote_src: yes
         mode: "0755"
     - name: Extract file 0
       command: /tmp/hedvig/hedvig_extract.bin

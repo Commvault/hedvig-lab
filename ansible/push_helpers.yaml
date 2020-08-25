@@ -25,6 +25,11 @@
       copy:    
         src: /tmp/hv_deploy.cfg
         dest: /tmp/hedvig/hv_deploy.cfg
+    - name: push vars
+      copy:
+        src: ./vars.yaml
+        dest: /tmp/hedvig/vars.yaml
+        backup: yes
     - name: push ansible file
       copy:
         src: ./main2.yaml
