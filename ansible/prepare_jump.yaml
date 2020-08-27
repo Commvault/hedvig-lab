@@ -1,0 +1,31 @@
+- name: Prepare the jump server to allow remote login and use of hedvig console
+  hosts: jump
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Add key for installing chrome
+      rpm_key:
+        state: present
+        key: https://dl.google.com/linux/linux_signing_key.pub
+      become: true
+    - name: Add repo for Chrome
+      yum_repository:
+        description: Chrome
+        name: google-chrome.repo
+        baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
+        state: present
+      become: true
+# https://draculaservers.com/tutorials/install-xrdp-centos/
+    - name: install google chrome, epel-release, and xrdp
+      yum:
+        name: 
+          - google-chrome-stable
+          - epel-release
+          - xrdp
+        state: latest
+      become: true
+    - name: Set password for azureuser to allow RDP
+      become: true
+      user:
+        name: azureuser
+        password: "{{ pwd | password_hash('sha512') }}"

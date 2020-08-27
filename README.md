@@ -50,7 +50,5 @@ su -l admin
 az login
 ansible-playbook /tmp/hedvig/main2.yaml
 ```
-9. Steps to be validated
-   1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
-   2. https://documentation.commvault.com/commvault/hedvig/article?p=121157.htm
-   3. https://documentation.commvault.com/commvault/hedvig/article?p=120084.htm
+9. Use RDP to login to the jump server
+10. Use previously installed Google Chrome to access the nodes at http://vm-storagenode0.internal.cloudapp.net
