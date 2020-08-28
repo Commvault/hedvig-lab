@@ -44,11 +44,16 @@ ansible-playbook ./main1.yaml
 ```
 export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment.internal.cloudapp.net
 ```
-8. On the deployment node, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
+1. **On vm-deployment**, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
 ```
 su -l admin
 az login
 ansible-playbook /tmp/hedvig/main2.yaml
+exit
 ```
-9. Use RDP to login to the jump server
-10. Use previously installed Google Chrome to access the nodes at http://vm-storagenode0.internal.cloudapp.net
+9. Back on your localhost, add a window manager, xrdp, and google chrome to enable RDP into the machine. You will access the Hedvig web console from the jump server
+```
+ansible-playbook ./main3.yaml
+```
+10. Use RDP to login to the jump server
+11. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net
