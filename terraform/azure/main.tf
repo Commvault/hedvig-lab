@@ -37,13 +37,13 @@ resource "azurerm_network_security_group" "nsg-public" {
   location            = azurerm_resource_group.rg-hedvig.location
 
   security_rule {
-    name                       = "SSH"
+    name                       = "AllowedPorts"
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "22"
+    destination_port_ranges     = ["22","3389"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

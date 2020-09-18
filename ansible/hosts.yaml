@@ -8,10 +8,10 @@ all:
         "{{ jump_server }}"
     proxy:
       hosts:
-        vm-proxy:
+        vm-proxy.internal.cloudapp.net:
     deployment:
       hosts:
-        vm-deployment:
+        vm-deployment.internal.cloudapp.net:
     storagenodes:
       hosts:
-        vm-storagenode[0:2]:
+        vm-storagenode[0:2].internal.cloudapp.net:

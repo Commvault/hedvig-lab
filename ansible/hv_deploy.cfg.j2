@@ -1,28 +1,28 @@
 # copied to ~admin folder and used during the hv_deploy step
 
 [pages]
-vm-storagenode0.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode1.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode2.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
+vm-storagenode0.internal.cloudapp.net
+vm-storagenode1.internal.cloudapp.net
+vm-storagenode2.internal.cloudapp.net
 
 [hblock]
-vm-storagenode0.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode1.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode2.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
+vm-storagenode0.internal.cloudapp.net
+vm-storagenode1.internal.cloudapp.net
+vm-storagenode2.internal.cloudapp.net
 
 [hpod1]
-vm-storagenode0.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode1.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
-vm-storagenode2.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
+vm-storagenode0.internal.cloudapp.net
+vm-storagenode1.internal.cloudapp.net
+vm-storagenode2.internal.cloudapp.net
 
 [hpod:children]
 hpod1
 
 [cvms]
-vm-proxy.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
+vm-proxy.internal.cloudapp.net
 
 [commvault]
-vm-proxy.{{ fqdn_hash.stdout }}.bx.internal.cloudapp.net
+vm-proxy.internal.cloudapp.net
 
 [cluster:children]
 pages
@@ -56,4 +56,3 @@ commvault_setup=True
 lsitype=lsijbod
 storage_interface=''
 ssh_password=hedvig
-commvault_setup=True

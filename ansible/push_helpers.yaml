@@ -1,0 +1,37 @@
+- name: Prepare the hv_deploy file and push Ansible script for execution on deployment node
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Resolve variables in file (nothing right now)
+      template:
+        src: ./hv_deploy.cfg.j2
+        dest: /tmp/hv_deploy.cfg
+- name: Push generated file
+  hosts: deployment
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: create directory
+      file:
+        path: /tmp/hedvig
+        state: directory
+        owner: admin
+        group: admin
+        mode: "0777"
+      become: yes
+    - name: Push hv_deploy.cfg
+      copy:    
+        src: /tmp/hv_deploy.cfg
+        dest: /tmp/hedvig/hv_deploy.cfg
+    - name: push vars
+      copy:
+        src: ./vars.yaml
+        dest: /tmp/hedvig/vars.yaml
+        backup: yes
+    - name: push ansible file
+      copy:
+        src: ./main2.yaml
+        dest: /tmp/hedvig/main2.yaml
+        backup: yes

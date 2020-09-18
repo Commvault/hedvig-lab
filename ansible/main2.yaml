@@ -1,6 +1,35 @@
-# MANUAL: login to vm-deployment server and run az login
-# export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
-# az login
-- import_playbook: ./extract_software.yaml
-# Currently messing up access to the VMs if invoked
-#- import_playbook: ./set_hostnames.yaml
+- name: Copy software, extract, and then run hv_deploy
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars.yaml
+  tasks:
+    - name: Copy the software from the bucket
+      command: "az storage blob download --account-name sahvsoftware --container schvsoftware --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
+    - name: Unarchive software and place in /tmp
+      unarchive:
+        src: /tmp/hedvig/hedvig.zip
+        dest: /tmp/hedvig/.
+        mode: "0755"
+    - name: Extract file 0
+      command: /tmp/hedvig/hedvig_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Extract file 1
+      command: /tmp/hedvig/rpm_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Remove existing cluster
+      command: /opt/hedvig/bin/hv_deploy --delete_specific_cluster hotelvictor
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+    - name: Create new cluster
+      command: /opt/hedvig/bin/hv_deploy --deploy_new_cluster /tmp/hedvig/hv_deploy.cfg
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo

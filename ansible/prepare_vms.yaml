@@ -30,6 +30,16 @@
         groups: admin, wheel
         append: yes
         state: present
+        generate_ssh_key: yes
+    - name: Modify wheel group to allow password-less sudo operations (for admin user)
+      become: true
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^# %wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+        backup: yes
     - name: Install additional packages
       yum:
         name: "{{ packages }}"
@@ -44,7 +54,7 @@
       pip:
         name: fabric
       become: yes
-- name: Install Azure CLI
+- name: Install Azure CLI and ansible
   hosts: deployment
   vars_files:
     - ./vars.yaml
@@ -66,7 +76,12 @@
         name: azure-cli
         state: latest
       become: true
-- name: Steps from set_sshd_rootpw
+    - name: install ansible (deployment server only)
+      yum:
+        name: ansible
+        state: latest
+      become: true
+- name: Setup
   hosts:
     - proxy
     - deployment
@@ -85,6 +100,24 @@
         path: /etc/waagent.conf
         regexp: "^ResourceDisk.Format=y"
         line: "ResourceDisk.Format=n"
+      become: yes
+    - name: Disable selinux 0
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: "^SELINUX=enforcing"
+        line: "SELINUX=disabled"
+      become: yes
+    - name: Disable selinux 1
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: "^SELINUX=permissive"
+        line: "SELINUX=disabled"
+      become: yes
+    - name: Stop and disable firewalld to enable graphical installer
+      service:
+        name: firewalld
+        state: stopped
+        enabled: False  
       become: yes
     - name: Restart server
       reboot:

@@ -25,32 +25,35 @@ These are the specific installation instructions for creating the cluster in Azu
 ```
 echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/terraform.tfvars
 ```
-4. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
+4. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this replacing "<<name>>" with the name of the blob you will download
+```
+pwd: hedvig
+jump_server:
+software_filename: <<name>>
+```
+5. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
 ```
 cd ./ansible
 ansible-playbook ./main0.yaml
 ```
-5. Update the local known_hosts, validate connectivity, and prepare the VMs
+6. Update the local known_hosts, validate connectivity, and prepare the VMs
 ```
 ansible-playbook ./main1.yaml
 ```
-6. Authenticate the vm-deployment server to Azure
+7. Login to vm-deployment
 ```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
-az login
+export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment.internal.cloudapp.net
 ```
-6. Download and extract the software on vm-deployment
+8. **On vm-deployment**, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
 ```
-ansible-playbook ./main2.yaml
-```
-7. Login to vm-deployment and run the hv_deploy installation
-```
-export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'`
-ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment
 su -l admin
-/opt/hedvig/bin/hv_deploy --deploy_new_cluster /tmp/hv_deploy.cfg
+az login
+ansible-playbook /tmp/hedvig/main2.yaml
+exit
 ```
-8. Steps to be validated
-   1. hv_deploy .... (not sudo) https://documentation.commvault.com/commvault/hedvig/article?p=121158.htm 
-   2. https://documentation.commvault.com/commvault/hedvig/article?p=121157.htm
-   3. https://documentation.commvault.com/commvault/hedvig/article?p=120084.htm
+9. Back on your localhost, add a window manager, xrdp, and google chrome to enable RDP into the machine. You will access the Hedvig web console from the jump server
+```
+ansible-playbook ./main3.yaml
+```
+10. Use RDP to login to the jump server
+11. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net. Use ```azureuser``` as the username and the password you specified in ```vars.yaml``` as the password
