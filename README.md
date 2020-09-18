@@ -56,4 +56,4 @@ exit
 ansible-playbook ./main3.yaml
 ```
 10. Use RDP to login to the jump server
-11. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net
+11. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net. Use ```azureuser``` as the username and the password you specified in ```vars.yaml``` as the password
