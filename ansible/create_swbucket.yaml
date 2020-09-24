@@ -1,0 +1,11 @@
+- name: Create Azure resources
+  hosts: localhost
+  vars_files:
+    - ./vars.yaml
+  connection: local
+  tasks:
+    - name: Create Azure resource group, bucket to store software
+      terraform:
+        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/swbucket/"
+        force_init: yes
+        state: present

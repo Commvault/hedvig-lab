@@ -6,7 +6,7 @@
   tasks:
     - name: Create Azure resources
       terraform:
-        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/"
+        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/resources/"
         force_init: yes
         state: present
       register: tfoutput

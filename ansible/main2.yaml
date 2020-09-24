@@ -5,7 +5,7 @@
     - ./vars.yaml
   tasks:
     - name: Copy the software from the bucket
-      command: "az storage blob download --account-name sahvsoftware --container schvsoftware --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
+      command: "az storage blob download --account-name sahedvigsw --container schedvigsw --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
     - name: Unarchive software and place in /tmp
       unarchive:
         src: /tmp/hedvig/hedvig.zip

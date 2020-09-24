@@ -4,7 +4,7 @@
     - ./vars.yaml
   connection: local
   tasks:
-    - name: Destroy Azure resources
+    - name: Destroy Azure resource group, bucket to store software
       terraform:
-        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/resources/"
+        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/swbucket/"
         state: absent
