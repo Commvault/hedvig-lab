@@ -4,16 +4,7 @@
     - ./vars.yaml
   connection: local
   tasks:
-    - name: Get latest requirements.txt for Azure python modules
-      get_url: 
-        url: https://raw.githubusercontent.com/ansible/ansible/stable-2.9/packaging/requirements/requirements-azure.txt
-        dest: /tmp/requirements-azure.txt
-    - name: Install necessary python modules
-      pip:
-        requirements: /tmp/requirements-azure.txt
-        executable: pip3
-        extra_args: --user
     - name: Create resource
       azure_rm_resourcegroup:
         name: rg-foo
-        location: foo
+        location: eastus
