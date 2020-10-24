@@ -1,0 +1,33 @@
+- name: Create Azure bucket for software and upload the software
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ../vars.yaml
+  tasks:
+    - name: Create resource group
+      azure_rm_resourcegroup:
+        name: rghedvigsw
+        location: eastus
+    - name: Create storage account
+      azure_rm_storageaccount:
+        name: sahedvigsw
+        resource_group: rghedvigsw
+        account_type: Standard_LRS
+        allow_blob_public_access: False
+    - name: Create storage container and upload software
+      azure_rm_storageblob:
+        resource_group: rghedvigsw
+        storage_account_name: sahedvigsw        
+        container: schedvigsw
+        blob: "{{ software_filename }}"
+        src: "/tmp/{{ software_filename }}"
+
+
+
+    #     # - name: Create Azure resource group, bucket to store software
+    # #   terraform:
+    # #     project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/swbucket/"
+    # #     force_init: yes
+    # #     state: present
+    # - name: Upload the software to the bucket
+    #   command: "az storage blob upload --account-name sahedvigsw --container schedvigsw --name {{ software_filename }} --file /tmp/{{ software_filename }}"
