@@ -21,12 +21,22 @@ These are the specific installation instructions for creating the cluster in Azu
 ### Azure preparation, local software installation, parameter file creation
 1. Submit a service request to Azure to increase the number of CPUs to 64 for the subscription you will be using.
 2. If your local machine is running Windows, it is recommended to install Windows Subsystem for Linux
-3. Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) on your local machine
+3. Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) on your local machine
 4. Prepare for Terraform setup by creating a ```./terraform/azure/swbucket/terraform.tfvars``` file with your subscription id (assumes you've cloned the repo onto your own machine)
 ```
 echo "subscription_id = \"<<your sub-id here>>\"\n" >> ./terraform/azure/swbucket/terraform.tfvars
 ```
-5. Prepare for Ansible by creating a ```./ansible/vars.yaml``` file that looks like this replacing "<<name>>" with the name of the blob you will download
+5. Create a Python virtual environment and install run Ansible. Remaining Ansible commands will run within the venv environment
+``` 
+python3 -m virtualenv venv
+source venv/bin/activate
+pip install ansible
+```
+6. Add the Azure collection and supporting Python modules into the virtual Python environment
+```
+ansible-playbook ./prepare_env.yaml
+```
+7. Prepare for Ansible by creating a ```./vars.yaml``` file that looks like this replacing "<<name>>" with the name of the blob you will download
 ```
 pwd: hedvig
 jump_server:
@@ -37,8 +47,7 @@ software_filename: <<name>>
 1. Download the Hedvig software from [Commvault](http://cloud.commvault.com) into a local ```/tmp``` directory
 2. Create a resource group and bucket to store the Hedvig software zip file. This is separate from the resource group created in subsequent steps as resources in subsequent steps may be created / destroyed with regularity.
 ```
-cd ./ansible
-ansible-playbook ./create_swbucket.yaml
+ansible-playbook ./cloud_resources/create_swbucket.yaml
 ```
 
 ### Resource setup
@@ -75,10 +84,10 @@ ansible-playbook ./main3.yaml
 ### Resource destruction
 Executing the follow step removes all Hedvig software and associated cloud resources. This step is irreversible.   
 ```
-ansible-playbook ./destroy_resources.yaml
+ansible-playbook ./cloud_resources/destroy_resources.yaml
 ```
 ### Software bucket destruction
 Executing the follow step removes all Azure resources created with the ```create_swbucket.yaml``` playbook. This step is irreversible.   
 ```
-ansible-playbook ./destroy_swbucket.yaml
+ansible-playbook ./cloud_resources/destroy_swbucket.yaml
 ```
