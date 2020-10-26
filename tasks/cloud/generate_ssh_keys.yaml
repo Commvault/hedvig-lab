@@ -1,7 +1,5 @@
 - name: Setup ssh keys
   hosts: localhost
-  vars_files: 
-    - ./vars.yaml
   connection: local
   tasks:
     - name: Remove key from local agent. Otherwise there will be too many retries

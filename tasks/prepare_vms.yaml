@@ -1,17 +1,24 @@
 - name: Prepare VMs for hedvig installation
   hosts:
+    - localhost
+  connection: local
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Load Python modules to support azure and password hashing
+      pip:
+        name: 
+          - passlib
+        state: present
+- name: Prepare VMs for hedvig installation
+  hosts:
     - proxy
     - deployment
     - storagenodes
   vars_files:
-    - ./vars.yaml
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
     - ./packages.yaml
   tasks:
-    # - name: Upgrade all packages
-    #   yum:
-    #     name: "*"
-    #     state: latest
-    #   become: true
     - name: Set root password
       become: true
       user:
@@ -54,28 +61,11 @@
       pip:
         name: fabric
       become: yes
-- name: Install Azure CLI and ansible
+- name: Install ansible
   hosts: deployment
   vars_files:
-    - ./vars.yaml
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
   tasks:
-    - name: Add key
-      rpm_key:
-        state: present
-        key: https://packages.microsoft.com/keys/microsoft.asc
-      become: true
-    - name: Add repository from MSFT
-      yum_repository:
-        description: MSFT repo
-        name: azure-cli.repo
-        baseurl: https://packages.microsoft.com/yumrepos/azure-cli
-        state: present
-      become: true
-    - name: install the latest version of Azure CLI
-      yum:
-        name: azure-cli
-        state: latest
-      become: true
     - name: install ansible (deployment server only)
       yum:
         name: ansible
@@ -87,7 +77,7 @@
     - deployment
     - storagenodes
   vars_files:
-    - ./vars.yaml
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
   tasks:
     - name: Disable password auth
       lineinfile:

@@ -1,7 +1,5 @@
 - name: Capture jump server IP from terraform output
   hosts: localhost
-  vars_files:
-    - ./vars.yaml
   connection: local
   tasks:
     - name: Capture IP address from terraform output. This step needs refactoring
@@ -9,11 +7,11 @@
       register: ip_addr
     - name: Insert the jump server IP to the vars.yaml file
       lineinfile:
-        path: ./vars.yaml
+        path: "{{ lookup('env', 'PWD') }}/vars.yaml"
         regexp: '^jump_server:'
         line: 'jump_server: {{ ip_addr.stdout }}'
     - name: remove the quotes
       replace:
-        path: ./vars.yaml
+        path: "{{ lookup('env', 'PWD') }}/vars.yaml"
         regexp: '["|,]'
         replace: ''

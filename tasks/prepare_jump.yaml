@@ -2,7 +2,7 @@
   hosts: localhost
   connection: local
   vars_files:
-    - ./vars.yaml
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
   tasks:
     - name: add host
       add_host:
@@ -11,7 +11,7 @@
 - name: Prepare the jump server to allow remote login and use of hedvig console
   hosts: '{{ jump_server }}'
   vars_files:
-    - ./vars.yaml
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
   tasks:
     - name: Add key for installing chrome
       rpm_key:

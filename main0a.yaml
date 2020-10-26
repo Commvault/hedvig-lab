@@ -1,0 +1,3 @@
+- import_playbook: ./tasks/cloud/generate_ssh_keys.yaml
+- import_playbook: ./tasks/cloud/create_resources.yaml
+- import_playbook: ./tasks/cloud/capture_jumpserver_ip.yaml

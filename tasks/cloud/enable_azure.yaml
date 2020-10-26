@@ -7,3 +7,9 @@
     - name: Load Python modules to support azure
       pip:
         requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+        state: present
+    - name: Load Python modules to support azure and password hashing
+      pip:
+        name: 
+          - azure-cli
+        state: present

@@ -1,12 +1,10 @@
 - name: Create Azure resources
   hosts: localhost
-  vars_files:
-    - ./vars.yaml
   connection: local
   tasks:
     - name: Create Azure resources
       terraform:
-        project_path: "{{ lookup('env', 'PWD') }}/../terraform/azure/resources/"
+        project_path: "{{ lookup('env', 'PWD') }}/tasks/cloud/terraform/azure/resources/"
         force_init: yes
         state: present
       register: tfoutput

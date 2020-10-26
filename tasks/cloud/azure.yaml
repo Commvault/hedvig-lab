@@ -1,7 +1,7 @@
 - name: Generate keys and create Azure resources
   hosts: localhost
   vars_files:
-    - ./vars.yaml
+    - ../vars.yaml
   connection: local
   tasks:
     - name: Create resource group

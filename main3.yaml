@@ -1,1 +1,1 @@
-- import_playbook: ./prepare_jump.yaml
+- import_playbook: ./tasks/prepare_jump.yaml
