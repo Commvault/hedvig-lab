@@ -1,0 +1,13 @@
+- name: Validate connectivity 
+  hosts: 
+    proxy
+    deployment
+    storagenodes
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Implicitly validate connectivity and capture hostname / hostname -f pairs
+      command: "hostname -f"
+      register: hostNames
+    - debug: 
+        msg: "{{ hostNames.stdout }}"

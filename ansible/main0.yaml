@@ -1,3 +1,0 @@
-- import_playbook: ./generate_ssh_keys.yaml
-- import_playbook: ./create_resources.yaml
-- import_playbook: ./capture_jumpserver_ip.yaml

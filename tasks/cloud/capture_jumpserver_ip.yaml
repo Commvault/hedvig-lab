@@ -1,0 +1,17 @@
+- name: Capture jump server IP from terraform output
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Capture IP address from terraform output. This step needs refactoring
+      shell: grep -E "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" /tmp/tf.output
+      register: ip_addr
+    - name: Insert the jump server IP to the vars.yaml file
+      lineinfile:
+        path: "{{ lookup('env', 'PWD') }}/vars.yaml"
+        regexp: '^jump_server:'
+        line: 'jump_server: {{ ip_addr.stdout }}'
+    - name: remove the quotes
+      replace:
+        path: "{{ lookup('env', 'PWD') }}/vars.yaml"
+        regexp: '["|,]'
+        replace: ''

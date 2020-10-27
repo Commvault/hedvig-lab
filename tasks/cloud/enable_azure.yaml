@@ -1,0 +1,15 @@
+- name: Initialize the Ansible collections and Python modules
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Load Ansible azure collection
+      command: ansible-galaxy collection install -c azure.azcollection
+    - name: Load Python modules to support azure
+      pip:
+        requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+        state: present
+    - name: Load Azure CLI Python modules
+      pip:
+        name: 
+          - azure-cli
+        state: present

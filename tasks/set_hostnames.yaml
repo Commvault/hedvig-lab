@@ -1,0 +1,15 @@
+- name: Validate connectivity by generating /etc/hosts entries and copying to VMs
+  hosts:
+    proxy
+    deployment
+    storagenodes
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    # - name: Set hostname to x.internal.cloudapp.net instead of value with hash
+    #   shell: "hostnamectl set-hostname {{ inventory_hostname_short }}.internal.cloudapp.net"
+    #   become: yes
+    - name: Set hostname to x.internal.cloudapp.net instead of value with hash
+      hostname: 
+        name: "{{ inventory_hostname_short }}.internal.cloudapp.net"
+      become: yes

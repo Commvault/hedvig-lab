@@ -31,3 +31,4 @@ override.tf.json
 *.tfvars
 **/vars.yaml
 **/hv_deploy.cfg
+venv

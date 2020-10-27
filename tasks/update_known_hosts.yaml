@@ -1,0 +1,6 @@
+- name: Add new ip / key combination to known_hosts to prevent annoying prompts
+  hosts: localhost
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - local_action: shell ssh-keyscan {{ jump_server }} >> ~/.ssh/known_hosts
