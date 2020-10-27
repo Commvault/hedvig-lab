@@ -1,17 +1,5 @@
 - name: Prepare VMs for hedvig installation
   hosts:
-    - localhost
-  connection: local
-  vars_files:
-    - "{{ lookup('env', 'PWD') }}/vars.yaml"
-  tasks:
-    - name: Load Python modules to support azure and password hashing
-      pip:
-        name: 
-          - passlib
-        state: present
-- name: Prepare VMs for hedvig installation
-  hosts:
     - proxy
     - deployment
     - storagenodes

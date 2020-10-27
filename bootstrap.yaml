@@ -6,6 +6,7 @@
       blockinfile:
         path: ./tasks/cloud/terraform/azure/resources/terraform.tfvars
         create: yes
+        backup: yes
         block: |
           subscription_id = "put your subscription id here"
         mode: '0644'
@@ -19,4 +20,9 @@
           jump_server:
           software_filename: hedvig_42.zip
         mode: '0644'
+        state: present
+    - name: Load Python module to support password hashing
+      pip:
+        name: 
+          - passlib
         state: present
