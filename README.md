@@ -25,7 +25,7 @@ pip install ansible
 ```
 2. Creating skeleton parameter files for Terraform and Ansible. Edit the files accordingly
 ```
-ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./create_parameter_files.yaml
+ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./bootstrap.yaml
 ```
 
 ## Cloud Provider-specific Notes
@@ -50,7 +50,7 @@ ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./tasks/cloud/create_swbucke
 ```
 ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./main0a.yaml
 ```
-2. Prepare the deployment server for Azure and download the software
+1. Prepare the jump and deployment servers
 ```
 ansible-playbook ./main0b.yaml
 export JUMP=`grep jump_server ./vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment.internal.cloudapp.net
@@ -60,7 +60,6 @@ ansible-playbook ./main0c.yaml
 ```
 5. Update the local known_hosts, validate connectivity, and prepare the VMs
 ```
-cd ..
 ansible-playbook ./main1.yaml
 ```
 6. Login to vm-deployment
@@ -75,12 +74,8 @@ ansible-playbook /tmp/hedvig/main2.yaml
 exit
 exit
 ```
-8. Back on your localhost, add a window manager, xrdp, and google chrome to enable RDP into the machine. You will access the Hedvig web console from the jump server
-```
-ansible-playbook ./main3.yaml
-```
-9. Use RDP to login to the jump server
-10. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net. Use ```hotelvictor``` as the username and the password you specified in ```vars.yaml``` as the password
+8. Use RDP from your local machine to login to the jump server
+9. On the jump server, access the console (via /usr/bin/google-chrome) at http://vm-storagenode0.internal.cloudapp.net. Use ```hotelvictor``` as the username and the password you specified in ```vars.yaml``` as the password
 
 ### Resource destruction
 Executing the follow step removes all Hedvig software and associated cloud resources. This step is irreversible.   
