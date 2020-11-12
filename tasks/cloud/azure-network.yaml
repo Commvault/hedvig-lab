@@ -1,11 +1,13 @@
 - name: Create Azure network resources
   hosts: localhost
   connection: local
+  vars_files:
+    - ./azure-vars.yaml
   tasks:
     - name: Create vnet
       azure_rm_virtualnetwork:
         name: vnet-hedvig
-        location: eastus
+        location: '{{ region }}'
         resource_group: rg-hedvig
         address_prefixes_cidr:
           - "10.0.0.0/16"

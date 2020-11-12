@@ -1,17 +1,16 @@
 - name: Create Azure compute resources
   hosts: localhost
   connection: local
+  vars_files:
+    - ./azure-vars.yaml
   tasks:
-
-# vm-jump
-
     - name: Create vm-jump
       azure_rm_virtualmachine:
         name: vm-jump
         resource_group: rg-hedvig
         subnet_name: sn-public
         network_interface_names: ["ni-jump"]
-        vm_size: Standard_D2_v3
+        vm_size: "{{ vm_size.proxy }}"
         os_type: Linux
         os_disk_name: vm-jump-disk-os
         os_disk_caching: ReadWrite
@@ -21,12 +20,11 @@
         ssh_password_enabled: false
         ssh_public_keys: 
           - path: "/home/azureuser/.ssh/authorized_keys"
-            key_data: "{{ lookup('file', '~/.ssh/hedvig.pub') }}"
-#        boot_diagnostics: 
+            key_data: "{{ lookup('file', '{{ key_path_public }}') }}"
         image:
           publisher: OpenLogic
           offer: CentOS
-          sku: 7.7
+          sku: '{{ os_version }}'
           version: latest
         state: present
 

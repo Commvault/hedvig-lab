@@ -1,0 +1,8 @@
+region: eastus
+vm_size:
+  proxy: "Standard_D2_v3"
+  deployment: "Standard_D8_v3"
+  storagenode: "Standard_D8_v3"
+storage_account_type: Standard_LRS
+key_path_public: ~/.ssh/hedvig.pub
+os_version: "7.7"

@@ -1,8 +1,10 @@
 - name: Create Azure network resources
   hosts: localhost
   connection: local
+  vars_files:
+    - ./azure-vars.yaml
   tasks:
     - name: Create resource group
       azure_rm_resourcegroup:
         name: rg-hedvig
-        location: eastus
+        location: "{{ region }}"
