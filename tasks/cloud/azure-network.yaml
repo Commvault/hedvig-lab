@@ -93,6 +93,7 @@
       register: output
     - name: Insert the jump server IP to the vars.yaml file
       lineinfile:
+        create: yes
         path: "{{ lookup('env', 'PWD') }}/vars.yaml"
         regexp: '^jump_server:'
         line: 'jump_server: {{ output.state.ip_address }}'
