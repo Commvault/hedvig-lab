@@ -66,6 +66,7 @@
         os_type: Linux
         os_disk_name: vm-deployment-disk-os
         os_disk_caching: ReadWrite
+        os_disk_size_gb: 128
         storage_account_name: sahedvig
         admin_username: azureuser
         short_hostname: vm-deployment

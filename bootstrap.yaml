@@ -2,15 +2,6 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Create terraform .tfvars
-      blockinfile:
-        path: ./tasks/cloud/terraform/azure/resources/terraform.tfvars
-        create: yes
-        backup: yes
-        block: |
-          subscription_id = "put your subscription id here"
-        mode: '0644'
-        state: present
     - name: Create vars.yaml
       blockinfile:
         path: ./vars.yaml
