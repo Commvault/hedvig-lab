@@ -27,9 +27,61 @@
           sku: '{{ os_version }}'
           version: latest
         state: present
-
-# vm-proxy
-
-# vm-deployment
+    - name: Create vm-proxy
+      azure_rm_virtualmachine:
+        name: vm-proxy
+        resource_group: rg-hedvig
+        subnet_name: sn-private
+        network_interface_names: ["ni-proxy"]
+        vm_size: "{{ vm_size.proxy }}"
+        managed_disk_type: '{{ storage_account_type }}'
+        os_type: Linux
+        os_disk_name: vm-proxy-disk-os
+        os_disk_caching: ReadWrite
+        storage_account_name: sahedvig
+        admin_username: azureuser
+        short_hostname: vm-proxy
+        ssh_password_enabled: false
+        ssh_public_keys: 
+          - path: "/home/azureuser/.ssh/authorized_keys"
+            key_data: "{{ lookup('file', '{{ key_path_public }}') }}"
+        image:
+          publisher: OpenLogic
+          offer: CentOS
+          sku: '{{ os_version }}'
+          version: latest
+        data_disks:
+          - lun: 0
+            managed_disk_type: '{{ storage_account_type }}'
+            disk_size_gb: 64
+        state: present
+    - name: Create vm-deployment
+      azure_rm_virtualmachine:
+        name: vm-deployment
+        resource_group: rg-hedvig
+        subnet_name: sn-private
+        network_interface_names: ["ni-deployment"]
+        vm_size: "{{ vm_size.deployment }}"
+        managed_disk_type: '{{ storage_account_type }}'
+        os_type: Linux
+        os_disk_name: vm-deployment-disk-os
+        os_disk_caching: ReadWrite
+        storage_account_name: sahedvig
+        admin_username: azureuser
+        short_hostname: vm-deployment
+        ssh_password_enabled: false
+        ssh_public_keys: 
+          - path: "/home/azureuser/.ssh/authorized_keys"
+            key_data: "{{ lookup('file', '{{ key_path_public }}') }}"
+        image:
+          publisher: OpenLogic
+          offer: CentOS
+          sku: '{{ os_version }}'
+          version: latest
+        data_disks:
+          - lun: 0
+            managed_disk_type: '{{ storage_account_type }}'
+            disk_size_gb: 64
+        state: present
 
 # vm-storagenode0
