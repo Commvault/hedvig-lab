@@ -1,29 +1,8 @@
-- name: Generate keys and create Azure resources
+- name: Create Azure network resources
   hosts: localhost
-  vars_files:
-    - ../vars.yaml
   connection: local
   tasks:
     - name: Create resource group
       azure_rm_resourcegroup:
-        name: rg-foo
+        name: rg-hedvig
         location: eastus
-    - name: Create vnet
-      azure_rm_virtualnetwork:
-        name: vnet-hedvig
-        location: eastus
-        resource_group: rg-foo
-        address_prefixes_cidr:
-          - "10.0.0.0/16"
-    - name: Create public subnet
-      azure_rm_subnet:
-        name: sn-public
-        resource_group: rg-foo
-        virtual_network_name: vnet-hedvig
-        address_prefix_cidr: "10.0.1.0/24"
-    - name: Create private subnet
-      azure_rm_subnet:
-        name: sn-private
-        resource_group: rg-foo
-        virtual_network_name: vnet-hedvig
-        address_prefix_cidr: "10.0.2.0/24"
