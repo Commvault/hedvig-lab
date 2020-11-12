@@ -110,17 +110,16 @@
             private_ip_allocation_method: Dynamic
             public_ip_address_name: pip-jump
         state: present
-    - name: Create ni-proxy
+    - name: Create network interfaces - private subnet
       azure_rm_networkinterface:
-        name: ni-proxy
+        name: '{{ item }}'
         resource_group: rg-hedvig
         subnet_name: sn-private
         virtual_network: vnet-hedvig
         state: present
-    - name: Create ni-deployment
-      azure_rm_networkinterface:
-        name: ni-deployment
-        resource_group: rg-hedvig
-        subnet_name: sn-private
-        virtual_network: vnet-hedvig
-        state: present
+      loop:
+        - ni-proxy
+        - ni-deployment
+        - ni-storagenode0
+        - ni-storagenode1
+        - ni-storagenode2
