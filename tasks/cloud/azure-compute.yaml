@@ -1,0 +1,37 @@
+- name: Create Azure compute resources
+  hosts: localhost
+  connection: local
+  tasks:
+
+# vm-jump
+
+    - name: Create vm-jump
+      azure_rm_virtualmachine:
+        name: vm-jump
+        resource_group: rg-hedvig
+        subnet_name: sn-public
+        network_interface_names: ["ni-jump"]
+        vm_size: Standard_D2_v3
+        os_type: Linux
+        os_disk_name: vm-jump-disk-os
+        os_disk_caching: ReadWrite
+        storage_account_name: sahedvig
+        admin_username: azureuser
+        short_hostname: vm-jump
+        ssh_password_enabled: false
+        ssh_public_keys: 
+          - path: "/home/azureuser/.ssh/authorized_keys"
+            key_data: "{{ lookup('file', '~/.ssh/hedvig.pub') }}"
+#        boot_diagnostics: 
+        image:
+          publisher: OpenLogic
+          offer: CentOS
+          sku: 7.7
+          version: latest
+        state: present
+
+# vm-proxy
+
+# vm-deployment
+
+# vm-storagenode0

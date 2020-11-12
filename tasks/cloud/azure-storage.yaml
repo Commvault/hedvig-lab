@@ -1,0 +1,11 @@
+- name: Create Azure storage resources
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Create storage account
+      azure_rm_storageaccount:
+        name: sahedvig
+        resource_group: rg-hedvig
+        account_type: Standard_LRS
+        allow_blob_public_access: False
+        state: present
