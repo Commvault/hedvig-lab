@@ -1,0 +1,71 @@
+- name: Create Azure network resources
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ./azure-vars.yaml
+  tasks:
+    - name: Create private network security group
+      azure_rm_securitygroup:
+        name: nsg-private
+        resource_group: rg-hedvig
+        rules:
+          - name: SSH
+            priority: 1000
+            direction: Inbound
+            access: Allow
+            protocol: Tcp
+            source_port_range: "*"
+            destination_port_range: ["22"]
+            source_address_prefix: '{{ cidr.public }}'
+            destination_address_prefix: "*"
+          - name: storage-node
+            priority: 1001
+            direction: Inbound
+            access: Allow
+            protocol: Tcp
+            source_port_range: "*"
+            destination_port_range: ["22", "80", "443", "2181", "3000", "4000", "7000 - 7003", "7010", "7100", "7500", "8000", "8080 - 8081", "8777 - 8778", "8090 - 8096", "11001", "11002", "15000"]
+            source_address_prefix: '{{ cidr.private }}'
+            destination_address_prefix: "*"
+          - name: udp
+            priority: 1002
+            direction: Inbound
+            access: Allow
+            protocol: Udp
+            source_port_range: "*"
+            destination_port_range: ["1024 - 65535", "111"]
+            source_address_prefix: '{{ cidr.private }}'
+            destination_address_prefix: "*"
+          - name: proxy
+            priority: 1003
+            direction: Inbound
+            access: Allow
+            protocol: Tcp
+            source_port_range: "*"
+            destination_port_range: ["111", "875", "2049", "2224", "3121", "3260", "21064", "33333", "50000 - 50008", "50022"]
+            source_address_prefix: '{{ cidr.private }}'
+            destination_address_prefix: "*"
+        state: present
+    - name: Create private subnet
+      azure_rm_subnet:
+        name: sn-private
+        resource_group: rg-hedvig
+        virtual_network_name: vnet-hedvig
+        address_prefix_cidr: '{{ cidr.private }}'
+        security_group: nsg-private
+        state: present
+# Network interfaces
+    - name: Create network interfaces - private subnet
+      azure_rm_networkinterface:
+        name: '{{ item }}'
+        resource_group: rg-hedvig
+        subnet_name: sn-private
+        virtual_network: vnet-hedvig
+        security_group: nsg-private
+        state: present
+      loop:
+        - ni-proxy
+        - ni-deployment
+        - ni-storagenode0
+        - ni-storagenode1
+        - ni-storagenode2

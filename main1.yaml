@@ -1,5 +1,3 @@
-- import_playbook: ./tasks/update_known_hosts.yaml
-- import_playbook: ./tasks/validate_connectivity.yaml
 - import_playbook: ./tasks/prepare_vms.yaml
 - import_playbook: ./tasks/set_hostnames.yaml
 - import_playbook: ./tasks/push_helpers.yaml
