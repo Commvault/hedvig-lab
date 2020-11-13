@@ -6,3 +6,7 @@ vm_size:
 storage_account_type: Standard_LRS
 key_path_public: ~/.ssh/hedvig.pub
 os_version: "7.7"
+cidr:
+  base: "10.0.0.0/16"
+  public: "10.0.1.0/24"
+  private: "10.0.2.0/24"
