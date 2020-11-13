@@ -55,6 +55,7 @@
         resource_group: rg-hedvig
         subnet_name: sn-public
         virtual_network: vnet-hedvig
+        security_group: nsg-public
         ip_configurations:
           - name: ni-jump-config
             private_ip_allocation_method: Dynamic

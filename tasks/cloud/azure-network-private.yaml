@@ -61,6 +61,7 @@
         resource_group: rg-hedvig
         subnet_name: sn-private
         virtual_network: vnet-hedvig
+        security_group: nsg-private
         state: present
       loop:
         - ni-proxy
