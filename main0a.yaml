@@ -1,6 +1,8 @@
 - import_playbook: ./tasks/cloud/generate_ssh_keys.yaml
 - import_playbook: ./tasks/cloud/azure.yaml
 - import_playbook: ./tasks/cloud/azure-network.yaml
+- import_playbook: ./tasks/cloud/azure-network-public.yaml
+- import_playbook: ./tasks/cloud/azure-network-private.yaml
 - import_playbook: ./tasks/cloud/azure-storage.yaml
 - import_playbook: ./tasks/cloud/azure-compute.yaml
 - import_playbook: ./tasks/update_known_hosts.yaml
