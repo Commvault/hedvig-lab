@@ -27,7 +27,6 @@ pip install ansible
 ```
 ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./bootstrap.yaml
 ```
-
 ## Cloud Provider-specific Notes
 ### Azure preparation, local software installation, parameter file creation
 These are the specific installation instructions for creating the cluster in Azure. Presumes one has a subscription and sufficient privileges to create sufficient CPUs in the environment.
@@ -47,19 +46,18 @@ ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./tasks/cloud/create_swbucke
 ### Cloud compute, storage, and network resources
 1. Generate a fresh set of SSH keys, create Azure resources, and capture the resulting jump server IP
 ```
-ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./main0a.yaml
+ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./main1a.yaml
 ```
 2. Prepare the jump and deployment servers
 ```
-ansible-playbook ./main0b.yaml
+ansible-playbook ./main1b.yaml
 export JUMP=`grep jump_server ./vars.yaml | awk '{split($0,a," "); print a[2]}'` && ssh -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -J azureuser@$JUMP azureuser@vm-deployment.internal.cloudapp.net
 az login
 exit
-ansible-playbook ./main0c.yaml
 ```
-1. Prepare the VMs
+3. Continue setup
 ```
-ansible-playbook ./main1.yaml
+ansible-playbook ./main1c.yaml ./main1d.yaml
 ```
 4. Login to vm-deployment
 ```
@@ -68,7 +66,6 @@ export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` &
 5. **On vm-deployment**, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
 ```
 su -l admin
-az login
 ansible-playbook /tmp/hedvig/main2.yaml
 exit
 exit
