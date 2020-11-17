@@ -1,3 +1,0 @@
-- import_playbook: ./tasks/prepare_vms.yaml
-- import_playbook: ./tasks/set_hostnames.yaml
-- import_playbook: ./tasks/push_helpers.yaml
