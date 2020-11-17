@@ -1,6 +1,5 @@
 ---
 - name: Prepare the jump server to allow remote login and use of hedvig console
-  #hosts: '{{ jump_server }}'
   hosts:
     - jump
   vars_files:
