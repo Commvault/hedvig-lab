@@ -1,8 +1,0 @@
-- name: Download the software from the blob
-  hosts:
-    - deployment
-  vars_files:
-    - "{{ lookup('env', 'PWD') }}/vars.yaml"
-  tasks:
-    - name: Copy the software from the bucket
-      command: "az storage blob download --account-name sahedvigsw --container schedvigsw --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"

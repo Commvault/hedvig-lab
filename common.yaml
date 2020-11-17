@@ -1,0 +1,11 @@
+---
+- hosts: 
+    - proxy
+    - deployment
+    - storagenodes
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Prepare proxy, deployment, and storage nodes
+      include_role:
+        name: common

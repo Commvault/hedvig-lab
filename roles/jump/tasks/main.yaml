@@ -1,0 +1,45 @@
+- name: Add key for installing chrome
+  rpm_key:
+    state: present
+    key: https://dl.google.com/linux/linux_signing_key.pub
+  become: true
+- name: Add repo for Chrome
+  yum_repository:
+    description: Chrome
+    name: google-chrome.repo
+    baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
+    state: present
+  become: true
+# https://draculaservers.com/tutorials/install-xrdp-centos/
+- name: install epel-release
+  yum:
+    name: 
+      - epel-release
+    state: latest
+  become: true
+- name: install google chrome, xrdp, and Xfce (window manager)
+  yum:
+    name: 
+      - google-chrome-stable
+      - xrdp
+      - '@Xfce'
+    state: latest
+  become: true
+- name: create .Xclients file
+  blockinfile:
+    path: ~/.Xclients
+    create: yes
+    block: |
+      xfce4-session
+    mode: 'a+x'
+- name: enable xrdp
+  systemd:
+    name: xrdp
+    state: started
+    enabled: yes
+  become: true  
+- name: Set password for azureuser to allow RDP
+  become: true
+  user:
+    name: azureuser
+    password: "{{ pwd | password_hash('sha512') }}"

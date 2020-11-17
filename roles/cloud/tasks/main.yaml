@@ -1,0 +1,8 @@
+---
+- include_tasks: ./azure.yaml
+- include_tasks: ./azure-network.yaml
+- include_tasks: ./azure-network-public.yaml
+- include_tasks: ./azure-network-private.yaml
+- include_tasks: ./azure-storage.yaml
+- include_tasks: ./azure-compute.yaml
+- include_tasks: ./update_known_hosts.yaml

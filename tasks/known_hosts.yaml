@@ -1,7 +1,0 @@
-- name: Validate connectivity; make sure keys and jump_server are working correctly
-  hosts: localhost
-  vars_files:
-    - "{{ lookup('env', 'PWD') }}/vars.yaml"
-  tasks:
-    - name: Add host to known_hosts without having to specify the public key Shameful kludge. Need to figure out the known_host command
-      local_action: shell ssh-keyscan {{ jump_server }} >> ~/.ssh/known_hosts

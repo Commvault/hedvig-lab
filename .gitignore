@@ -30,5 +30,4 @@ override.tf.json
 .DS_Store
 *.tfvars*
 **/vars.yaml
-**/hv_deploy.cfg
 venv
