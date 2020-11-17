@@ -66,7 +66,7 @@ export JUMP=`grep jump_server vars.yaml | awk '{split($0,a," "); print a[2]}'` &
 5. **On vm-deployment**, authenticate to Azure, and run remaining steps on the deployment server (via previously uploaded Ansible script)
 ```
 su -l admin
-ansible-playbook /tmp/hedvig/main2.yaml
+ansible-playbook /tmp/hedvig/setup2.yaml
 exit
 exit
 ```

@@ -1,0 +1,38 @@
+- name: Local ssh maintenance
+  hosts: localhost
+  connection: local
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"  
+  tasks:
+    - name: Local ssh maintenance
+      include_role:
+        name: known_hosts
+- name: Prepare the jump server to allow remote login and use of hedvig console
+  hosts:
+    - jump
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"  
+  tasks:
+    - name: Prepare the jump server
+      include_role:
+        name: jump
+- name: Prepare the other servers
+  hosts: 
+    - proxy
+    - deployment
+    - storagenodes
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Prepare proxy, deployment, and storage nodes
+      include_role:
+        name: common
+- name: Prepare the other servers
+  hosts: 
+    - deployment
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Further deployment server prep
+      include_role:
+        name: deployment
