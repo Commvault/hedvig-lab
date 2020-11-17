@@ -40,8 +40,8 @@
     backup: yes
 - name: push ansible file
   copy:
-    src: main2.yaml
-    dest: /tmp/hedvig/main2.yaml
+    src: setup2.yaml
+    dest: /tmp/hedvig/setup2.yaml
     backup: yes
 - name: Download software from bucket to local dir
   azure_rm_storageblob:
