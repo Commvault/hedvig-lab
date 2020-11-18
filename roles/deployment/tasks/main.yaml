@@ -1,15 +1,15 @@
-- name: Add key
-  rpm_key:
-    state: present
-    key: https://packages.microsoft.com/keys/microsoft.asc
-  become: true
-- name: Add repository from MSFT
-  yum_repository:
-    description: MSFT repo
-    name: azure-cli.repo
-    baseurl: https://packages.microsoft.com/yumrepos/azure-cli
-    state: present
-  become: true
+# - name: Add key
+#   rpm_key:
+#     state: present
+#     key: https://packages.microsoft.com/keys/microsoft.asc
+#   become: true
+# - name: Add repository from MSFT
+#   yum_repository:
+#     description: MSFT repo
+#     name: azure-cli.repo
+#     baseurl: https://packages.microsoft.com/yumrepos/azure-cli
+#     state: present
+#   become: true
 - name: Install ansible and azure-cli
   yum:
     name: 
@@ -40,8 +40,8 @@
     backup: yes
 - name: push ansible file
   copy:
-    src: setup2.yaml
-    dest: /tmp/hedvig/setup2.yaml
+    src: setup3.yaml
+    dest: /tmp/hedvig/setup3.yaml
     backup: yes
 - name: Download software from bucket to local dir
   azure_rm_storageblob:
