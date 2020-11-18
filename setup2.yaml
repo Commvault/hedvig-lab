@@ -1,14 +1,3 @@
-# - name: add host
-#   hosts:
-#     localhost
-#   connection: local
-#   vars_files:
-#     - "{{ lookup('env', 'PWD') }}/vars.yaml"  
-#   tasks:
-#     - name: Add the jump server IP to the host list
-#       add_host:
-#         hostname: '{{ jump_server }}'
-#         groups: jump
 - name: Prepare the jump server to allow remote login and use of hedvig console
   hosts:
     - jump
