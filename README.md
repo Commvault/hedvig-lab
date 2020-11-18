@@ -28,9 +28,10 @@ pip install ansible
 ### Bucket creation to store software
 This step is required only once to faciliate repeated creation / destruction of the Hedvig cluster and associated cloud resources
 1. Download the Hedvig software from [Commvault](http://cloud.commvault.com) into a local ```/tmp``` directory
-2. Create a resource group and bucket to store the Hedvig software zip file. This is separate from the resource group created in subsequent steps as resources in subsequent steps may be created / destroyed with regularity.
+2. Create a resource group and bucket to store the Hedvig software zip file. This is separate from the resource group created in subsequent steps as resources in subsequent steps may be created / destroyed with regularity. It requires steps from ```local.yaml``` to be executed first
 ```
-ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./swbucket.yaml
+ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./local.yaml
+ANSIBLE_CONFIG=./ansible-local.cfg ansible-playbook ./swbucket_create.yaml
 ```
 ### Azure preparation, local software installation, parameter file creation
 These are the specific installation instructions for creating the cluster in Azure. Presumes one has a subscription and sufficient privileges to create sufficient CPUs in the environment.
