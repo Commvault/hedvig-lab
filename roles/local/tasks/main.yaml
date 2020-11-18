@@ -1,14 +1,8 @@
 ---
 - name: Create vars.yaml
-  blockinfile:
-    path: "{{ lookup('env', 'PWD') }}/vars.yaml"
-    create: yes
-    block: |
-      pwd: hedvig
-      jump_server:
-      software_filename: hedvig_42.zip
-    mode: '0644'
-    state: present
+  template:
+    src: vars.yaml.j2
+    dest: "{{ lookup('env', 'PWD') }}/vars.yaml"
 - name: Load Python modules 
   pip:
     name: 
