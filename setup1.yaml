@@ -1,9 +1,9 @@
-- name: Local ssh maintenance
+- name: Local dynamic ip-related maintenance
   hosts: localhost
   connection: local
   vars_files:
     - "{{ lookup('env', 'PWD') }}/vars.yaml"  
   tasks:
-    - name: Local ssh maintenance
+    - name: Local dynamic ip-related maintenance
       include_role:
-        name: known_hosts
+        name: local_inventory
