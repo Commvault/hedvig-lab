@@ -1,5 +1,5 @@
 ---
-- name: Local ssh maintenance
+- name: Local actions once the jump server IP is established
   hosts: localhost
   connection: local
   vars_files:
@@ -8,5 +8,3 @@
     - name: Local ssh maintenance
       include_role:
         name: known_hosts
-
-        
