@@ -1,15 +1,16 @@
-# - name: Add key
-#   rpm_key:
-#     state: present
-#     key: https://packages.microsoft.com/keys/microsoft.asc
-#   become: true
-# - name: Add repository from MSFT
-#   yum_repository:
-#     description: MSFT repo
-#     name: azure-cli.repo
-#     baseurl: https://packages.microsoft.com/yumrepos/azure-cli
-#     state: present
-#   become: true
+### Setup Azure CLI libraries
+- name: Add key
+  rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+  become: true
+- name: Add repository from MSFT
+  yum_repository:
+    description: MSFT repo
+    name: azure-cli.repo
+    baseurl: https://packages.microsoft.com/yumrepos/azure-cli
+    state: present
+  become: true
 - name: Install ansible and azure-cli
   yum:
     name: 
@@ -17,12 +18,7 @@
       - ansible
     state: latest
   become: true
-- name: Load Ansible azure collection
-  command: ansible-galaxy collection install -c azure.azcollection
-- name: Load Python modules to support azure
-  pip:
-    requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
-    state: present
+### Directory work
 - name: create directory
   file:
     path: /tmp/hedvig
@@ -43,11 +39,3 @@
     src: setup3.yaml
     dest: /tmp/hedvig/setup3.yaml
     backup: yes
-- name: Download software from bucket to local dir
-  azure_rm_storageblob:
-    resource_group: rghedvigsw
-    storage_account_name: sahedvigsw        
-    container: schedvigsw
-    blob: "{{ software_filename }}"
-    dest: /tmp/hedvig.zip
-    state: present
