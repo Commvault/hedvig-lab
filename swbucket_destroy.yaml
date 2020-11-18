@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Destroy resource group
+    azure_rm_resourcegroup:
+      name: rghedvigsw
+      location: eastus
+      state: absent

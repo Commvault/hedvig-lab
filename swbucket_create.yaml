@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"  
+  tasks:
+    - name: Create the bucket for software
+      include_role:
+        name: swbucket
