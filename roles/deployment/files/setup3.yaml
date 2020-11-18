@@ -1,6 +1,8 @@
 - name: Copy software, extract, and then run hv_deploy
   hosts: localhost
   connection: local
+  vars_files:
+    - /tmp/hedvig/vars.yaml
   tasks:
     - name: Copy the software from the bucket
       command: "az storage blob download --account-name sahedvigsw --container schedvigsw --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
