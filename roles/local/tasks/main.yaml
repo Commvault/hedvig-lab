@@ -1,0 +1,42 @@
+---
+- name: Create vars.yaml
+  blockinfile:
+    path: "{{ lookup('env', 'PWD') }}/vars.yaml"
+    create: yes
+    block: |
+      pwd: hedvig
+      jump_server:
+      software_filename: hedvig_42.zip
+    mode: '0644'
+    state: present
+- name: Load Python modules 
+  pip:
+    name: 
+      - passlib
+      - azure-cli
+    state: present
+- name: Load Ansible azure collection
+  command: ansible-galaxy collection install -c azure.azcollection
+- name: Load Python modules to support azure
+  pip:
+    requirements: ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+    state: present
+- name: Remove key from local agent. Otherwise there will be too many retries
+  shell: ssh-add -d ~/.ssh/hedvig
+  ignore_errors: yes
+- name: Delete existing keys if they exist
+  file:
+    path: ~/.ssh/hedvig
+    state: absent
+- name: Delete existing keys if they exist
+  file:
+    path: ~/.ssh/hedvig.pub
+    state: absent
+- name: Generate keys
+  openssh_keypair:
+    force: yes
+    mode: '0400'
+    size: 2048
+    path: ~/.ssh/hedvig
+- name: Add key to local agent
+  shell: ssh-add ~/.ssh/hedvig

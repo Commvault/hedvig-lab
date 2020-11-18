@@ -1,0 +1,35 @@
+- name: Copy software, extract, and then run hv_deploy
+  hosts: localhost
+  connection: local
+  vars_files:
+    - /tmp/hedvig/vars.yaml
+  tasks:
+    - name: Copy the software from the bucket
+      command: "az storage blob download --account-name sahedvigsw --container schedvigsw --name {{ software_filename }} --file /tmp/hedvig/hedvig.zip"
+    - name: Unarchive software and place in /tmp
+      unarchive:
+        src: /tmp/hedvig/hedvig.zip
+        dest: /tmp/hedvig/.
+        mode: "0755"
+    - name: Extract file 0
+      command: /tmp/hedvig/hedvig_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Extract file 1
+      command: /tmp/hedvig/rpm_extract.bin
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+      become: true
+    - name: Remove existing cluster
+      command: /opt/hedvig/bin/hv_deploy --delete_specific_cluster hotelvictor
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo
+    - name: Create new cluster
+      command: /opt/hedvig/bin/hv_deploy --deploy_new_cluster /tmp/hedvig/hv_deploy.cfg
+      environment:
+        HV_ROOTPASS: hedvig
+        HV_MEM_PROFILE: small_demo

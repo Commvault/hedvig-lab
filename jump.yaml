@@ -1,0 +1,10 @@
+---
+- name: Prepare the jump server to allow remote login and use of hedvig console
+  hosts:
+    - jump
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"  
+  tasks:
+    - name: Prepare the jump server
+      include_role:
+        name: jump

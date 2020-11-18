@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Prepare the localhost
+      include_role:
+        name: local
+    - name: Create the cloud resources
+      include_role:
+        name: cloud

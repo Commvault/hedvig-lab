@@ -1,0 +1,9 @@
+---
+- hosts: 
+    - deployment
+  vars_files:
+    - "{{ lookup('env', 'PWD') }}/vars.yaml"
+  tasks:
+    - name: Further preparation of the deployment server
+      include_role:
+        name: deployment

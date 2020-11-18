@@ -1,0 +1,8 @@
+---
+- name: Create storage account
+  azure_rm_storageaccount:
+    name: sahedvig
+    resource_group: rg-hedvig
+    account_type: '{{ storage_account_type }}'
+    allow_blob_public_access: False
+    state: present
