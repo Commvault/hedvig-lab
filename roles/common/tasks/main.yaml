@@ -76,4 +76,4 @@
   become: yes
 - name: Restart server
   reboot:
-    become: yes
+  become: yes
