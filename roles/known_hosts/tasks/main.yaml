@@ -1,6 +1,2 @@
 - name: Add new ip / key combination to known_hosts to prevent annoying prompts
   local_action: shell ssh-keyscan {{ jump_server }} >> ~/.ssh/known_hosts
-- name: add host
-  add_host:
-    hostname: '{{ jump_server }}'
-    groups: jump
