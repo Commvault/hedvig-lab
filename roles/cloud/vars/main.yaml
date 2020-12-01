@@ -5,7 +5,7 @@ vm_size:
   storagenode: "Standard_D8_v3"
 storage_account_type: Standard_LRS
 key_path_public: ~/.ssh/hedvig.pub
-os_version: "7.7"
+os_version: "7_9"
 cidr:
   base: "10.0.0.0/16"
   public: "10.0.1.0/24"
